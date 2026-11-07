@@ -1,0 +1,451 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background: radial-gradient(
+        circle at top,
+        #273454,
+        #11182d 55%,
+        #080d1b
+    );
+    color: #f8e9d5;
+    font-family: Georgia, serif;
+    text-align: center;
+    overflow-x: hidden;
+    padding: 35px 15px;
+    position: relative;
+}
+
+/* Moon */
+
+.moon {
+    position: fixed;
+    top: 35px;
+    right: 12%;
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    background: #fff0c5;
+    box-shadow:
+        0 0 20px #ffe5a1,
+        0 0 55px rgba(255, 226, 158, 0.5);
+    animation: moon-glow 3s infinite alternate;
+    z-index: 0;
+}
+
+.moon::after {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: 22px;
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    background: #17213b;
+}
+
+/* Stars */
+
+.stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+        radial-gradient(2px 2px at 10% 20%, white, transparent),
+        radial-gradient(2px 2px at 30% 50%, #ffe8b5, transparent),
+        radial-gradient(2px 2px at 70% 20%, white, transparent),
+        radial-gradient(2px 2px at 85% 60%, white, transparent),
+        radial-gradient(2px 2px at 50% 80%, #ffe8b5, transparent),
+        radial-gradient(2px 2px at 90% 15%, white, transparent),
+        radial-gradient(2px 2px at 20% 85%, white, transparent);
+    background-size: 300px 300px;
+    animation: star-move 8s linear infinite;
+}
+
+@keyframes star-move {
+    from { background-position: 0 0; }
+    to { background-position: 300px 300px; }
+}
+
+@keyframes moon-glow {
+    from { filter: brightness(0.9); }
+    to { filter: brightness(1.2); }
+}
+
+/* Introduction */
+
+.intro {
+    position: relative;
+    z-index: 1;
+    margin: 35px auto 40px;
+}
+
+.small-heading {
+    color: #d7bd8e;
+    font-size: 10px;
+    letter-spacing: 5px;
+    margin-bottom: 15px;
+}
+
+.intro h1 {
+    font-size: clamp(27px, 7vw, 42px);
+    font-weight: normal;
+    color: #f5dfb6;
+    text-shadow: 0 0 15px rgba(255, 226, 170, 0.4);
+}
+
+.subtitle {
+    color: #c3c1d0;
+    font-style: italic;
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+/* Envelope */
+
+.open-toggle {
+    display: none;
+}
+
+.scene {
+    position: relative;
+    z-index: 2;
+    max-width: 650px;
+    margin: auto;
+}
+
+.envelope {
+    display: block;
+    position: relative;
+    width: min(290px, 85vw);
+    height: 180px;
+    margin: 0 auto 25px;
+    cursor: pointer;
+    background: #c9a878;
+    border-radius: 5px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
+    transition: transform 0.7s, opacity 0.7s;
+}
+
+.envelope-back {
+    position: absolute;
+    inset: 0;
+    background: #b99465;
+    border-radius: 5px;
+}
+
+.letter-preview {
+    position: absolute;
+    width: 85%;
+    height: 125px;
+    left: 7.5%;
+    top: 8px;
+    background: #fff2d9;
+    color: #604b39;
+    display: grid;
+    place-items: center;
+    font-style: italic;
+    transition: transform 0.8s;
+}
+
+.envelope-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 145px solid transparent;
+    border-right: 145px solid transparent;
+    border-top: 105px solid #e3c397;
+    transform-origin: top;
+    transition: transform 0.8s;
+    z-index: 3;
+}
+
+.envelope-front {
+    position: absolute;
+    inset: 0;
+    background: #d3b184;
+    clip-path: polygon(0 100%, 50% 47%, 100% 100%);
+    z-index: 4;
+}
+
+.seal {
+    position: absolute;
+    z-index: 5;
+    left: 50%;
+    top: 95px;
+    transform: translateX(-50%);
+    background: #873c49;
+    color: #ffe5d1;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 0 12px rgba(120, 20, 40, 0.5);
+}
+
+.tap-text {
+    position: absolute;
+    width: 100%;
+    top: 195px;
+    left: 0;
+    color: #e6d4b8;
+    font-size: 13px;
+    letter-spacing: 2px;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    50% { opacity: 0.4; }
+}
+
+/* Envelope opening */
+
+.open-toggle:checked ~ .scene .envelope {
+    transform: translateY(-20px);
+    opacity: 0;
+    pointer-events: none;
+    height: 0;
+    margin-bottom: 0;
+}
+
+.open-toggle:checked ~ .scene .envelope-flap {
+    transform: rotateX(180deg);
+}
+
+.open-toggle:checked ~ .scene .letter-preview {
+    transform: translateY(-60px);
+}
+
+/* Letter */
+
+.letter {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    padding: 0 24px;
+    background:
+        linear-gradient(rgba(255, 249, 235, 0.96),
+                        rgba(249, 237, 216, 0.98));
+    color: #514133;
+    border-radius: 5px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+    transform: translateY(25px);
+    transition:
+        max-height 1.8s ease,
+        opacity 1.2s ease,
+        transform 1.2s ease,
+        padding 1.2s ease;
+}
+
+.open-toggle:checked ~ .scene .letter {
+    max-height: 10000px;
+    opacity: 1;
+    padding: 35px 24px;
+    transform: translateY(0);
+    overflow: visible;
+}
+
+.letter-decoration {
+    color: #b18b53;
+    font-size: 25px;
+    letter-spacing: 8px;
+    margin: 15px 0;
+}
+
+.date {
+    font-size: 12px;
+    color: #987d5d;
+    font-style: italic;
+    margin-bottom: 15px;
+}
+
+.letter h2 {
+    font-size: clamp(22px, 5vw, 30px);
+    color: #75523e;
+    font-weight: normal;
+    line-height: 1.5;
+    margin-bottom: 30px;
+}
+
+.poem {
+    font-size: 15px;
+    line-height: 2;
+    margin: 0 auto 28px;
+    max-width: 510px;
+    color: #594638;
+}
+
+/* Closing */
+
+.closing {
+    border-top: 1px solid #d9c5a4;
+    margin-top: 35px;
+    padding-top: 20px;
+}
+
+.closing h3 {
+    font-size: 19px;
+    color: #79563f;
+    font-weight: normal;
+    line-height: 1.6;
+    margin: 20px 0;
+}
+
+.closing p {
+    font-size: 15px;
+    line-height: 1.9;
+    margin: 18px auto;
+    max-width: 490px;
+}
+
+.final-message {
+    color: #a44c60 !important;
+    margin-top: 35px !important;
+    font-style: italic;
+    text-shadow: 0 0 12px rgba(164, 76, 96, 0.15);
+    animation: heartbeat 2s infinite;
+}
+
+.love {
+    color: #a34d60;
+    font-size: 19px !important;
+    font-style: italic;
+}
+
+.signature {
+    margin-top: 35px !important;
+    font-style: italic;
+    color: #8b7156;
+}
+
+/* Floating decorations */
+/* Vintage Photo Frame */
+
+.photo-frame {
+    width: 220px;
+    margin: 20px auto 30px;
+    padding: 10px 10px 18px;
+    background: #fffaf0;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    transform: rotate(-3deg);
+    transition: transform 0.4s ease;
+}
+
+.photo-frame:hover {
+    transform: rotate(0deg) scale(1.04);
+}
+
+.photo-frame img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    display: block;
+}
+
+.photo-frame p {
+    color: #75523e;
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 13px;
+    margin-top: 12px;
+}
+.petal {
+    position: fixed;
+    bottom: -40px;
+    color: #e6c5c5;
+    font-size: 22px;
+    pointer-events: none;
+    animation: float-up 12s linear infinite;
+    z-index: 1;
+}
+
+.petal-one {
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.petal-two {
+    left: 35%;
+    animation-delay: 4s;
+}
+
+.petal-three {
+    left: 70%;
+    animation-delay: 2s;
+}
+
+.petal-four {
+    left: 90%;
+    animation-delay: 7s;
+}
+
+@keyframes float-up {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+    }
+    15% { opacity: 0.8; }
+    100% {
+        transform: translateY(-110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.035); }
+}
+
+/* Footer */
+
+.footer {
+    position: relative;
+    z-index: 2;
+    color: #b9a9a8;
+    font-style: italic;
+    font-size: 12px;
+    margin-top: 35px;
+}
+
+/* Mobile adjustment */
+
+@media (max-width: 480px) {
+    body {
+        padding: 25px 12px;
+    }
+
+    .moon {
+        width: 55px;
+        height: 55px;
+        top: 20px;
+        right: 8%;
+    }
+
+    .moon::after {
+        width: 55px;
+        height: 55px;
+        left: 17px;
+    }
+
+    .letter {
+        padding-left: 17px;
+        padding-right: 17px;
+    }
+
+    .open-toggle:checked ~ .scene .letter {
+        padding: 28px 17px;
+    }
+
+    .poem {
+        font-size: 14px;
+        line-height: 1.9;
+    }
+}
